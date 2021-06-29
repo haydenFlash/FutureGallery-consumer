@@ -1,0 +1,2 @@
+获得session域中的User对象的Name
+((User)request.getSession().getAttribute("user")).getName()
