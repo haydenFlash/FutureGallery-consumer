@@ -46,7 +46,7 @@
 
                         $("#create-studentOwner").html(html);
 
-                        var id = [[${#request.getSession().getAttribute("user").id}]];
+                        var id = [[${#session.getAttribute("user").id}]];
                         $("#create-studentOwner").val(id);
 
                         $(".time").datetimepicker({

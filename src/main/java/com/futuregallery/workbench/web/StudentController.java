@@ -28,6 +28,14 @@ public class StudentController {
         return "workbench/contacts/index";
     }
 
+    @RequestMapping("/detail")
+    public String getContactsDetail(String id, HttpServletRequest request) {
+        Student student = studentService.getStudent(id);
+        request.setAttribute("student", student);
+
+        return "workbench/contacts/detail";
+    }
+
     @RequestMapping("/getUserList")
     @ResponseBody
     public List<User> getUserList() {
