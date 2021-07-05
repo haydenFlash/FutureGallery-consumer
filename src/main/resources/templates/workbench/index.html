@@ -33,8 +33,74 @@
 		
 		
 		window.open("main/index.html","workareaFrame");
-		
+
+		// $("#updateBtn").click(function () {
+		// 	//确认原密码是否正确
+		// 	$.ajax({
+		// 		url:"checkPwd",
+		// 		data:{
+		// 			"pwd": $("#oldPwd").val()
+		// 		},
+		// 		type:"post",
+		// 		dataType:"json",
+		// 		success: function (resp) {
+		// 			if (!resp.success) {
+		// 				$("#msg").html(resp.msg);
+		// 			} else {
+		// 				$("#editPwdModal").modal("hide");
+		//
+		// 			}
+		// 		}
+		// 	})
+		//
+		// 	//确认重复密码与新密码是否相同
+		// 	//发起修改密码的请求
+		//
+		// });
 	});
+
+	function update() {
+		//确认原密码是否正确
+		$.ajax({
+			url:"checkPwd",
+			data:{
+				"pwd": $("#oldPwd").val()
+			},
+			type:"post",
+			dataType:"json",
+			success: function (resp) {
+				if (!resp.success) {
+					$("#msg").html(resp.msg);
+				} else {
+					//确认重复密码与新密码是否相同
+					if ($("#newPwd").val() != $("#confirmPwd").val()) {
+						$("#msg").html("新密码与确认密码不同！");
+					} else {
+						//发起修改密码的请求
+						$.ajax({
+							url:"editPwd",
+							data:{
+								"newPwd" : $("#newPwd").val()
+							},
+							type: "post",
+							dataType: "json",
+							success: function (resp1) {
+								if (resp1) {
+									alert("修改成功！");
+									$("#pwdForm")[0].reset();
+									$("#editPwdModal").modal("hide");
+								} else {
+									alert("修改失败！")
+								}
+							}
+						})
+
+					}
+
+				}
+			}
+		})
+	}
 	
 </script>
 
@@ -53,12 +119,12 @@
 				</div>
 				<div class="modal-body">
 					<div style="position: relative; left: 40px;">
-						姓名：<b>张三</b><br><br>
-						登录帐号：<b>zhangsan</b><br><br>
-						组织机构：<b>1005，市场部，二级部门</b><br><br>
-						邮箱：<b>zhangsan@bjpowernode.com</b><br><br>
-						失效时间：<b>2017-02-14 10:10:10</b><br><br>
-						允许访问IP：<b>127.0.0.1,192.168.100.2</b>
+						姓名：<b th:text="${#session.getAttribute('user').name}">xxx</b><br><br>
+						登录帐号：<b th:text="${#session.getAttribute('user').loginName}">xxx</b><br><br>
+<!--						组织机构：<b>1005，市场部，二级部门</b><br><br>-->
+<!--						邮箱：<b>zhangsan@bjpowernode.com</b><br><br>-->
+<!--						失效时间：<b>2017-02-14 10:10:10</b><br><br>-->
+<!--						允许访问IP：<b>127.0.0.1,192.168.100.2</b>-->
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -79,32 +145,35 @@
 					<h4 class="modal-title">修改密码</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="pwdForm">
 						<div class="form-group">
 							<label for="oldPwd" class="col-sm-2 control-label">原密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="oldPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="oldPwd" style="width: 200%;">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="newPwd" class="col-sm-2 control-label">新密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="newPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="newPwd" style="width: 200%;">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="confirmPwd" class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="confirmPwd" style="width: 200%;">
+								<input type="password" class="form-control" id="confirmPwd" style="width: 200%;">
 							</div>
 						</div>
+
+						<span style="position: relative; left: 230px" id="msg"></span>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../login.html';">更新</button>
+					<button type="button" class="btn btn-primary" onclick="update()">更新</button>
+<!--					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../login.html';">更新</button>-->
 				</div>
 			</div>
 		</div>
@@ -141,7 +210,7 @@
 						<span class="glyphicon glyphicon-user"></span> <span th:text="${#session.getAttribute('user').name}">zhangsan</span> <span class="caret"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="../settings/index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
+<!--						<li><a href="../settings/index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>-->
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
